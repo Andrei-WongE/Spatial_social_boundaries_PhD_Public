@@ -7,7 +7,7 @@ This project studies ethnic boundaries and food-purchase outcomes across London 
 
 1. Register Census, geographic, accessibility, POI and Tesco Grocery 1.0 source files.
 2. Prepare London data and validate coverage, geometry and ethnic proportions.
-3. Estimate canonical, CARBayes/Leroux (Model 2) and locally adaptive CARBayes (Model 3) boundaries; produce classifications, ethnic-specific maps and area summaries.
+3. Estimate canonical (Model 1), CARBayes/Leroux (Model 2) and locally adaptive CARBayes (Model 3) boundaries; produce classifications, ethnic-specific maps and area summaries.
 4. Construct food-environment measures and master tables.
 5. Select and transform predictors and outcomes.
 6. Fit frequentist models and assess spatial dependence, shared samples, weights and spatial impacts.
