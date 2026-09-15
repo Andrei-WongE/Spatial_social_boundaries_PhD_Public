@@ -14,6 +14,7 @@ This project studies ethnic boundaries and food-purchase outcomes across London 
 7. Fit INLA BYM2 outcome models and export prior, predictive and numerical diagnostics.
 8. Evaluate threshold, graph/control and exposure-uncertainty sensitivity and collect validation outputs.
 
+Additionally, script 'run_reports.R' triggers basic reporting and diagnostic checks using outputs in 'results' folder. Script does not run if 'tar_outdated()' results in outdated targets in pipeline. 
 
 ## Documentation
 
