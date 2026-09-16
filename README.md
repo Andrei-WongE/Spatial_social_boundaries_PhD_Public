@@ -1,5 +1,5 @@
 # Spatial_social_boundaries_PhD_Public
-Public repository of PhD spatial data pipeline. Result of refactoring entire PhD project using use {targets} + {tarchetypes} + Duck DB spatial for large spatial data operations + spatial Bayesian dissimilarity and Bayesian INLA/Inlabru areal data modelling.
+Public repository of PhD spatial data pipeline, processes approximately 20 hours. Result of refactoring entire PhD project using use {targets} + {tarchetypes} + Duck DB spatial for large spatial data operations + spatial Bayesian dissimilarity and Bayesian INLA/Inlabru areal data modelling.
 
 This project studies ethnic boundaries and food-purchase outcomes across London LSOAs. `_targets.R` orchestrates the analysis with **targets** and **tarchetypes**. Functions live in `R/`, source data in `Data/`, and analysis outputs in `results/`.
 
