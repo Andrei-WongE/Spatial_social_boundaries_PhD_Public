@@ -116,6 +116,6 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 
 ### Project-specific guidance
 
-- [`bayesian-workflow-inla` skill]
+- [`bayesian-workflow-inla` skill](bayesian-workflow-inla) adapted skill from [An opinionated Agent Skill for building, diagnosing, and reporting on Bayesian statistical models using PyMC and ArviZ.](https://github.com/Learning-Bayesian-Statistics/baygent-skills/tree/main/bayesian-workflow)
 
 
