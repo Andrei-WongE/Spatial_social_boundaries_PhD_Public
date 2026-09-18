@@ -1,0 +1,24 @@
+Package: bayesianWorkflowInla
+Type: Package
+Title: Opinionated Spatial Bayesian Modeling Workflow with R-INLA
+Version: 1.0.0
+Author: Alexandre Andorra, adapted for R-INLA
+Maintainer: Research Knowledge Base <research@example.com>
+Description: Contains critical guardrails (CPO/PIT calibration checks, PC priors, BYM2 spatial random effects, posterior marginals, DIC/WAIC model comparison) for spatial Bayesian modeling with R-INLA.
+License: MIT
+Encoding: UTF-8
+Imports:
+    INLA,
+    sf,
+    spdep,
+    ggplot2,
+    tidyverse,
+    tmap,
+    targets,
+    tarchetypes,
+    optparse,
+    jsonlite
+Suggests:
+    inlabru,
+    spatialreg,
+    patchwork
