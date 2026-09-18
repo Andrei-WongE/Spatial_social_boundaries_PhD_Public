@@ -110,6 +110,8 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 
 - ONS Census, 2011
 
+- Greater London Authority (LSOA Atlas)[https://data.london.gov.uk/dataset/lsoa-atlas-2n8zy]
+
 - Points of Interest Data. Data Creator/Publisher: Ordnance Survey & PointX. © Crown copyright and database right [2015]. Contains PointX database right [2015]. 
 
 - ONS Digital Vector Boundaries for Lower layer Super Output Areas (December 2011) Boundaries EW BFC (V3). [The BFC boundaries are full resolution - clipped to the coastline (Mean High Water mark)](https://geoportal.statistics.gov.uk/datasets/ons::lower-layer-super-output-areas-december-2011-boundaries-ew-bfc-v3/about)
