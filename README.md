@@ -108,11 +108,28 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 
 - Broadbridge, T. [Food deserts and geographically weighted regression replication repository](https://github.com/taylabroadbridge/paper-fooddeserts-gwr.git).
 
-- ONS Census, 2011
+- ONS Census, 2011, Tables: KS404UK - Car or van availability Change dataset.
+                            KS201EW — Ethnic Groups
+                            LC7202EW / LC7102EW — Distance Travelled to Work by Ethnic Group (Local Characteristics)
+                            LC7101EW — Method of Travel to Work by Ethnic Group (Local Characteristics)
+                            LC6115EW — Economic Activity by Ethnic Group (Local Characteristics)
+                            LC5202EW — Highest Level of Qualification by Ethnic Group (Local Characteristics)
+                            DC7401EWla / DC7401EW — Method of Travel to Work by Car or Van Availability
+                            KS102EW — Age Structure: Provides age bracket distributions
+                            KS105EW — Household Composition: Provides household structures
+                            KS204EW — Country of Birth: Measures immigrant concentration
+                            KS206EW — Household Language: Measures English language proficiency
+                            KS401EW — Dwellings, Household Spaces and Accommodation Type: Measures housing morphology 
+                            KS402EW — Tenure: Measures housing tenure and equity
+                            KS501EW — Qualifications and Students: Measures educational distribution
+                            KS601EW — Economic Activity: Measures labor market participation
+                            KS301EW — Health and Provision of Unpaid Care: Measures health deprivation and limiting illness
+  
+- Transport for London (TfL). Public Transport Accessibility Levels (PTAL / PTAI). Direct data request.
 
-- Greater London Authority (LSOA Atlas)[https://data.london.gov.uk/dataset/lsoa-atlas-2n8zy]
+- Greater London Authority [LSOA Atlas](https://data.london.gov.uk/dataset/lsoa-atlas-2n8zy)
 
-- Points of Interest Data. Data Creator/Publisher: Ordnance Survey & PointX. © Crown copyright and database right [2015]. Contains PointX database right [2015]. 
+- Ordnance Survey Points of Interest Data. Data Creator/Publisher: Ordnance Survey & PointX. © Crown copyright and database right [2015]. Contains PointX database right [2015]. 
 
 - ONS Digital Vector Boundaries for Lower layer Super Output Areas (December 2011) Boundaries EW BFC (V3). [The BFC boundaries are full resolution - clipped to the coastline (Mean High Water mark)](https://geoportal.statistics.gov.uk/datasets/ons::lower-layer-super-output-areas-december-2011-boundaries-ew-bfc-v3/about)
 
