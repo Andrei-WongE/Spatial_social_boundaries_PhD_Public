@@ -119,6 +119,6 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 - [`bayesian-workflow-inla` skill](bayesian-workflow-inla) adapted skill from [An opinionated Agent Skill for building, diagnosing, and reporting on Bayesian statistical models using PyMC and ArviZ.](https://github.com/Learning-Bayesian-Statistics/baygent-skills/tree/main/bayesian-workflow).
 - Gemini NotebookLM with technical documentation of [`targets package`](https://books.ropensci.org/targets/) and [`tarchetypes package`](https://docs.ropensci.org/tarchetypes/) for efficient consulting of targets and computational configuration of pipeline.
 - Posit AI assistant as refactoring orchestrator and validator of workflow based on code and results of [7 scripts PhD static workflow](https://github.com/Andrei-WongE/Social_boundaries_LAC).
-- My brain (novel approach in this nascent AI era), 3 years of training in spatial econometrics, Bayesian statistics and data management. See [my page](https://andrei-wonge.github.io/Andrei-Wong.github.io/) for theoretical and methodological underpinning of this workflow.
+- My brain (novel approach in this nascent AI era), 3 years of PhD level training in spatial econometrics, Bayesian statistics and data management. See [my page](https://andrei-wonge.github.io/Andrei-Wong.github.io/) for theoretical and methodological underpinning of this workflow.
 
 
