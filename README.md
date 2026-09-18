@@ -117,5 +117,7 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 ### Project-specific guidance
 
 - [`bayesian-workflow-inla` skill](bayesian-workflow-inla) adapted skill from [An opinionated Agent Skill for building, diagnosing, and reporting on Bayesian statistical models using PyMC and ArviZ.](https://github.com/Learning-Bayesian-Statistics/baygent-skills/tree/main/bayesian-workflow)
+- Gemini NotebookLM with technical documentation of [`targets package`](https://books.ropensci.org/targets/) and [`tarchetypes package`](https://docs.ropensci.org/tarchetypes/) to consult
+- Post AI assistant as refactoring orchestrator and validation of workflow based on code and results of [7 scripts PhD static workflow](https://github.com/Andrei-WongE/Social_boundaries_LAC)
 
 
