@@ -11,7 +11,7 @@
 
 ## Quick diagnostic checklist
 
-Run this immediately after fitting. If any check fails, do NOT interpret results. INLA does NOT use MCMC, so R-hat, ESS, divergences, and trace plots do NOT apply. We use cross-validated predictive density and numerical stability checks instead.
+Run these checks after fitting and investigate problems before relying on affected summaries. INLA does NOT use MCMC, so R-hat, ESS, divergences, and trace plots do NOT apply. We use cross-validated predictive density and numerical stability checks instead.
 
 ```r
 # After fitting:
@@ -19,15 +19,17 @@ Run this immediately after fitting. If any check fails, do NOT interpret results
 #                control.compute = list(cpo = TRUE, dic = TRUE, waic = TRUE))
 
 # 1. Check CPO failures (numerical stability check)
-# Standard threshold: failure rate <= 1% is pass
+# A positive flag identifies a CPO/PIT approximation to investigate
 fail_rate <- mean(result$cpo$failure > 0, na.rm = TRUE)
-cat(sprintf("CPO failure rate: %.2f%% (Pass if <= 1.00%%)\n", fail_rate * 100))
+cat(sprintf("CPO values flagged: %.2f%%\n", fail_rate * 100))
 
 # 2. PIT histogram (should be uniform for continuous data)
 hist(result$cpo$pit, breaks = 20, main = "PIT Histogram", xlab = "PIT")
 
 # 3. LCPO (lower is better; standard negative mean log-CPO)
-LCPO <- -mean(log(result$cpo$cpo[result$cpo$cpo > 0]), na.rm = TRUE)
+cpo <- result$cpo$cpo
+LCPO <- if (length(cpo) && all(is.finite(cpo) & cpo > 0)) -mean(log(cpo)) else NA_real_
+# Investigate missing or nonpositive CPO values before comparing scores.
 cat("LCPO:", round(LCPO, 4), "\n")
 
 # 4. Inspect marginal posteriors for key parameters (check for boundary effects or multimodality)
@@ -55,7 +57,7 @@ For spatial data with strong spatial autocorrelation, standard leave-one-out CPO
 
 PIT is a calibration check measuring $P(Y_i \le y_i \mid y_{-i})$.
 
-- For continuous data, a well-calibrated model has uniformly distributed PIT values on $(0, 1)$.
+- For continuous outcomes, a calibrated leave-one-out predictive distribution has approximately uniform PIT values. Dependence between areas affects formal test calibration. For counts and other discrete outcomes, the ordinary PIT is not continuously uniform; consider a randomized PIT $F_i(y_i^-)+U_i[F_i(y_i)-F_i(y_i^-)]$, where $U_i\sim\mathrm{Uniform}(0,1)$. [Dunn & Smyth (1996)](https://doi.org/10.1080/10618600.1996.10474708).
 - Results in `result$cpo$pit`.
 - A U-shaped PIT histogram indicates the predictive distribution is underdispersed (intervals too narrow).
 - An inverted U-shaped histogram indicates the predictive distribution is overdispersed (intervals too wide).
@@ -64,9 +66,7 @@ PIT is a calibration check measuring $P(Y_i \le y_i \mid y_{-i})$.
 
 INLA calculates CPO and PIT using numerical integration approximations. If the approximation is unstable for a particular observation, INLA flags it in `result$cpo$failure`.
 
-- **Pass / Excellent**: Failure rate $\le 1\%$ ($\le 0.01$)
-- **Warning / Fair**: $1\% < \text{Failure rate} \le 5\%$
-- **Fail / Poor**: Failure rate $> 5\%$ (Laplace approximation is unreliable)
+Inspect every positive flag, its magnitude, and the affected CPO/PIT value. The proportion flagged is descriptive, not an academic pass/fail cutoff. Recompute questionable values with `inla.cpo(result)` or explicit leave-one-out refits, especially when extreme CPO values drive a log score. [R-INLA FAQ](https://www.r-inla.org/faq).
 
 ## LCPO
 
@@ -75,16 +75,18 @@ Logarithmic Conditional Predictive Ordinate. Used for model comparison.
 $$\text{LCPO} = -\frac{1}{n} \sum_{i=1}^n \log(\text{CPO}_i)$$
 
 ```r
-LCPO <- -mean(log(result$cpo$cpo[result$cpo$cpo > 0]), na.rm = TRUE)
+cpo <- result$cpo$cpo
+LCPO <- if (length(cpo) && all(is.finite(cpo) & cpo > 0)) -mean(log(cpo)) else NA_real_
+# Investigate missing or nonpositive CPO values before comparing scores.
 ```
 Lower LCPO values indicate superior predictive accuracy.
 
-## When sampling fails: the escalation ladder
+## When diagnostics flag issues
 
 When INLA diagnostics show problems — high CPO failures, non-uniform PIT, or irregular marginals — escalate in this order:
 
-1. **Check CPO failures.** If $> 1\%$, increase integration accuracy: `control.inla = list(int.strategy = "grid", diff.logdens = 4)`.
-2. **Check PIT uniformity.** If non-uniform, change likelihood family (e.g. Poisson to Negative Binomial) or add observation/group random effects (`iid`).
+1. **Check CPO flags and tails.** Recompute flagged or extreme CPO/PIT values with `inla.cpo(result)` or held-out refits. If needed, examine integration settings such as `control.inla = list(int.strategy = "grid", diff.logdens = 4)`. The flag alone does not assess every posterior quantity.
+2. **Check predictive calibration.** Account for discrete outcomes and spatial dependence; use predictive replication to diagnose the pattern before changing a likelihood or random effects.
 3. **Check spatial graph integrity.** Run `validate_spatial_graph()` to catch disconnected spatial nodes.
 4. **Check marginal posteriors.** If mass piles up at boundaries, adjust PC priors or inspect sum-to-zero constraints (`constr = TRUE`).
 5. **Consider `inlabru`.** For non-linear observation processes or multi-likelihood models, use `inlabru`.

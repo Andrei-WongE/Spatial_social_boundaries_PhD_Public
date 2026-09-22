@@ -74,7 +74,7 @@ Unlike LKJ priors in PyMC/Stan, R-INLA does not directly sample dense correlatio
 |---|---|---|
 | Location (unbounded) | Normal (via `control.fixed`) | Symmetric, well-understood |
 | Scale / SD / Precision | `pc.prec` | Shrinks towards zero variance (base model) |
-| Spatial effects (BYM2) | `pc.prec` + `pc` for mixing | Shrinks towards spatial smoothness |
+| Spatial effects (BYM2) | `pc.prec` + graph-specific `pc` for mixing | Controls overall scale and shrinks the structured contribution toward its base model |
 | Autoregressive (AR1) | `pc.cor1` | Shrinks towards independent observations |
 | Degrees of freedom | `pc.dof` | Shrinks towards infinite df (Normal distribution) |
 
@@ -92,7 +92,9 @@ When you have many features and expect only a subset to be relevant, note that I
 
 Instead of sparse priors, in INLA we often use smooth shrinkage models (like random walks) or perform post-hoc variable selection by sampling from the joint posterior.
 
-# Variable importance in INLA: Extract samples using inla.posterior.sample and inla.posterior.sample.eval
+```r
+# Posterior effect relevance, given a prespecified substantive threshold.
+# Requires control.compute = list(config = TRUE) in the fit.
 samples <- inla.posterior.sample(1000, result)
 
 # inla.posterior.sample.eval evaluates expressions directly across the sample realizations
@@ -129,10 +131,7 @@ hist(y_prior_pred, breaks = 50, main = "Prior Predictive Distribution")
 # - Is the spread of outcomes reasonable?
 ```
 
-**Decision rule**:
-- If >10% of prior predictive samples are clearly implausible → tighten priors (e.g., reduce SD)
-- If prior predictions are extremely narrow → priors may be too informative, consider loosening
-- If prior predictions are reasonable → proceed to inference
+**Assessment**: Compare simulated outcomes and relevant summaries with substantive constraints. Revise priors when their implied data conflict with those constraints; there is no general 10% cutoff. Very narrow predictions may also be inappropriate. Document the judgment and examine the sensitivity of conclusions. [Gelman et al. (2020)](https://doi.org/10.48550/arXiv.2011.01808).
 
 ## Common mistakes
 
@@ -140,4 +139,4 @@ hist(y_prior_pred, breaks = 50, main = "Prior Predictive Distribution")
 2. **Ignoring scale**: A precision of 0.001 means very different things depending on the scale of the data. Always consider the units.
 3. **Forgetting to standardize predictors**: Without standardization, coefficients live on different scales, making shared priors inappropriate.
 4. **No prior predictive check**: The single most common source of modeling errors. Always visualize what your priors imply before fitting.
-5. **Using Gamma priors for precision instead of PC priors**: Historically, `Gamma(1e-3, 1e-3)` was used for precisions. This is highly informative and pulls towards infinite variance. Always use `pc.prec` instead.
+5. **Using a diffuse Gamma precision prior without checking its implications**: `Gamma(1e-3, 1e-3)` induces a heavy-tailed prior on variance, whose impact depends on the likelihood and scale. Compare defensible priors, including a calibrated `pc.prec` where suitable, through prior predictions and sensitivity analysis. [Simpson et al. (2017)](https://doi.org/10.1214/16-STS576).

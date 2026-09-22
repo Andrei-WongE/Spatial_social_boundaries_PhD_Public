@@ -7,13 +7,13 @@ suppressPackageStartupMessages({
 
 #' Generate Standard Report Figures for INLA Workflow
 #'
-#' Generates forest.png (posterior coefficients) and posterior_predictive.png (PPC replication check)
+#' Generates forest.png and, when observed and replicated outcomes are supplied, posterior_predictive.png
 #'
 #' @param result An INLA result object (loaded from .rds)
 #' @param y_obs Vector of observed outcomes
 #' @param output_dir Output directory path
-#' @param n_samples Number of posterior samples for PPC
-generate_inla_report_figures <- function(result, y_obs = NULL, output_dir = ".", n_samples = 100) {
+#' @param y_rep Numeric matrix of replicated outcomes; rows match y_obs, columns are draws
+generate_inla_report_figures <- function(result, y_obs = NULL, y_rep = NULL, output_dir = ".") {
   if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
   saved_files <- list()
 
@@ -44,48 +44,31 @@ generate_inla_report_figures <- function(result, y_obs = NULL, output_dir = ".",
     saved_files$forest <- forest_path
   }
 
-  # 2. Posterior Predictive Check Plot
-  if (!is.null(y_obs) && is.numeric(y_obs)) {
-    tryCatch({
-      suppressMessages({
-        samples <- INLA::inla.posterior.sample(n = n_samples, result)
-      })
-      
-      # Extract linear predictors via inla.posterior.sample.eval
-      eta_samples <- tryCatch({
-        INLA::inla.posterior.sample.eval(function(...) Predictor, samples)
-      }, error = function(e) {
-        # Fallback to matrix indexing if eval fails
-        eta_idx <- grep("^Predictor", rownames(samples[[1]]$latent))
-        sapply(samples, function(s) s$latent[eta_idx])
-      })
-      
-      if (!is.null(eta_samples) && nrow(eta_samples) == length(y_obs)) {
-        # Plot density of observed vs simulated replicates
-        df_obs <- data.frame(y = y_obs, type = "Observed")
-        
-        p_ppc <- ggplot() +
-          geom_density(data = df_obs, aes(x = y), color = "black", linewidth = 1.2)
-        
-        # Add sample densities
-        for (i in 1:min(30, n_samples)) {
-          df_rep <- data.frame(y = eta_samples[, i])
-          p_ppc <- p_ppc + geom_density(data = df_rep, aes(x = y), color = "steelblue", alpha = 0.15, linewidth = 0.4)
-        }
-        
-        p_ppc <- p_ppc +
-          theme_minimal() +
-          labs(title = "Posterior Predictive Check",
-               subtitle = "Black: Observed data | Blue: Posterior replicated latent distributions",
-               x = "Outcome Value", y = "Density")
-        
-        ppc_path <- file.path(output_dir, "posterior_predictive.png")
-        ggsave(ppc_path, p_ppc, width = 7, height = 5, dpi = 300)
-        saved_files$posterior_predictive <- ppc_path
-      }
-    }, error = function(e) {
-      warning(paste("Could not generate posterior predictive plot:", e$message))
-    })
+  # 2. Posterior predictive outcomes must already have been simulated
+  # through the fitted likelihood, including offsets/trials and hyperparameters.
+  if (!is.null(y_rep)) {
+    if (is.null(y_obs) || !is.numeric(y_obs) || !is.matrix(y_rep) ||
+        !is.numeric(y_rep) || nrow(y_rep) != length(y_obs) || ncol(y_rep) < 1) {
+      stop("Supply numeric y_obs and a numeric y_rep matrix with one row per observation and one column per posterior draw.")
+    }
+    if (any(!is.finite(y_obs)) || any(!is.finite(y_rep))) {
+      stop("Observed and replicated outcomes must be finite; remove missing observations consistently before plotting.")
+    }
+    p_ppc <- ggplot() +
+      stat_ecdf(data = data.frame(y = y_obs), aes(x = y),
+                geom = "step", color = "black", linewidth = 1.1)
+    for (i in seq_len(min(30L, ncol(y_rep)))) {
+      p_ppc <- p_ppc + stat_ecdf(
+        data = data.frame(y = y_rep[, i]), aes(x = y),
+        geom = "step", color = "steelblue", alpha = 0.2, linewidth = 0.4)
+    }
+    p_ppc <- p_ppc + theme_minimal() +
+      labs(title = "Posterior Predictive Check",
+           subtitle = "Black: observed outcomes | Blue: replicated outcomes",
+           x = "Outcome value", y = "Cumulative probability")
+    ppc_path <- file.path(output_dir, "posterior_predictive.png")
+    ggsave(ppc_path, p_ppc, width = 7, height = 5, dpi = 300)
+    saved_files$posterior_predictive <- ppc_path
   }
 
   return(saved_files)
@@ -97,6 +80,8 @@ if (sys.nframe() == 0) {
                 help = "Path to INLA result (.rds file)"),
     make_option(c("--y_data"), type = "character", default = NULL, 
                 help = "Optional path to RDS or CSV containing observed vector y"),
+    make_option(c("--y_rep"), type = "character", default = NULL,
+                help = "RDS matrix of replicated outcomes from the fitted likelihood"),
     make_option(c("--output_dir"), type = "character", default = ".", 
                 help = "Directory to save output figures")
   )
@@ -120,6 +105,7 @@ if (sys.nframe() == 0) {
     }
   }
   
-  figs <- generate_inla_report_figures(res_obj, y_obs = y_obs, output_dir = opt$output_dir)
+  y_rep <- if (!is.null(opt$y_rep)) readRDS(opt$y_rep) else NULL
+  figs <- generate_inla_report_figures(res_obj, y_obs = y_obs, y_rep = y_rep, output_dir = opt$output_dir)
   cat(paste("Generated figures:\n", paste(names(figs), unlist(figs), sep = ": ", collapse = "\n"), "\n"))
 }

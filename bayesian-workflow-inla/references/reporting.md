@@ -82,7 +82,7 @@ Copy this template into `<slug>/report.md` and fill in the placeholders:
 |-----------|---------------|---------------|
 | Fixed effects ($\beta$) | `control.fixed = list(prec = 1/2.5^2)` | Weakly informative on standardized covariates |
 | Spatial variance ($\sigma_s$) | `pc.prec(u = 1, alpha = 0.01)` | Penalized Complexity prior shrinking to zero variance |
-| Spatial mixing ($\phi$) | `pc(u = 0.5, alpha = 0.5)` | Equal prior mass above/below 50% spatial variance |
+| BYM2 mixing ($\phi$) | `pc(u = 0.5, alpha = 0.5)` | Graph-specific prior controlling the structured contribution; not an exact variance fraction at each area |
 
 ## Prior Predictive Check
 
@@ -92,9 +92,9 @@ Copy this template into `<slug>/report.md` and fill in the placeholders:
 
 ## Model Fit & Diagnostics
 
-| Diagnostic | Value | Standard Threshold | Status |
-|------------|-------|--------------------|--------|
-| CPO Failure Rate | <e.g., 0.00% > | $\le 1.00\%$ | <Pass / Warning / Fail> |
+| Diagnostic | Value | Interpretation | Action |
+|------------|-------|----------------|--------|
+| Positive CPO flags | <count and proportion> | Approximation flags, no universal cutoff | <inspect / recompute affected values> |
 | LCPO ($-\overline{\log \text{CPO}}$) | <e.g., 1.42> | Lower is better | — |
 | DIC | <e.g., 450.2> | Lower is better | — |
 | WAIC | <e.g., 452.1> | Lower is better | — |
@@ -102,7 +102,7 @@ Copy this template into `<slug>/report.md` and fill in the placeholders:
 ![PIT Histogram](pit_histogram.png)
 ![PIT ECDF](pit_ecdf.png)
 
-**Assessment:** <1–2 sentences stating whether CPO failure rates and PIT calibration pass standard criteria.>
+**Assessment:** <Describe flagged CPO values, any recomputation, and whether PIT is appropriate for the outcome type and spatial dependence.>
 
 ## Posterior Estimates
 
@@ -117,6 +117,8 @@ Copy this template into `<slug>/report.md` and fill in the placeholders:
 ## Posterior Predictive Check
 
 ![Posterior predictive](posterior_predictive.png)
+
+Generate this figure only from replicated *outcomes* drawn through the fitted likelihood (for example, provide `--y_rep` to the figure script).
 
 **Assessment:** <1–3 sentences — does the posterior predictive envelop the observed data? Any systematic residual clustering?>
 

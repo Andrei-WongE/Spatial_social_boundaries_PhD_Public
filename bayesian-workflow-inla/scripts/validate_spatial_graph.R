@@ -31,23 +31,29 @@ validate_spatial_graph <- function(spatial_obj, graph_out = NULL) {
   comp_info <- spdep::n.comp.nb(nb)
   n_components <- comp_info$nc
 
-  is_valid <- (length(zero_neighbors) == 0) && (n_components == 1)
+  is_symmetric <- spdep::is.symmetric.nb(nb)
+  self_loops <- which(vapply(seq_len(n_nodes), function(i) i %in% nb[[i]], logical(1)))
+  is_valid <- n_nodes > 0 && is_symmetric && length(self_loops) == 0
 
   diag_report <- list(
     n_nodes = n_nodes,
     n_components = n_components,
     zero_neighbor_nodes = zero_neighbors,
+    self_loop_nodes = self_loops,
+    is_symmetric = is_symmetric,
     average_neighbors = mean(card_nb),
     is_fully_connected = (n_components == 1),
-    valid_for_inla = is_valid
+    valid_for_inla = is_valid # disconnected components need suitable model treatment
   )
 
+  if (!is_symmetric || length(self_loops)) warning("Graph symmetry or self-loop check failed; review adjacency before fitting.")
+
   if (length(zero_neighbors) > 0) {
-    warning(sprintf("Spatial graph has %d isolated node(s) with 0 neighbors! ICAR/BYM2 require connected nodes or manual handling.", length(zero_neighbors)))
+    warning(sprintf("Spatial graph has %d singleton node(s); specify their prior treatment and component-aware constraints/scaling.", length(zero_neighbors)))
   }
 
   if (n_components > 1) {
-    warning(sprintf("Spatial graph has %d disconnected sub-components. Consider adjusting constr=TRUE or scaling components.", n_components))
+    warning(sprintf("Spatial graph has %d connected components; verify geography and use component-aware constraints/scaling.", n_components))
   }
 
   if (!is.null(graph_out)) {

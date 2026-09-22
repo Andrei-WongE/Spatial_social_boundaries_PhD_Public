@@ -8,8 +8,8 @@ suppressPackageStartupMessages({
 
 #' Assess INLA Model Calibration
 #'
-#' Evaluates PIT distribution uniformity, empirical vs theoretical coverage deviation,
-#' and optionally generates PIT histogram and ECDF plots.
+#' Summarizes ordinary PIT values and optionally plots their histogram and ECDF.
+#' Uniformity requires a continuous outcome; dependence affects formal tests.
 #'
 #' @param result An INLA result object (loaded from .rds)
 #' @param save_plots Logical; whether to save plot artifacts
@@ -21,47 +21,22 @@ assess_inla_calibration <- function(result, save_plots = FALSE, plot_dir = ".") 
   }
 
   pit_vals <- result$cpo$pit
-  pit_vals <- pit_vals[!is.na(pit_vals) & pit_vals > 0 & pit_vals < 1]
+  pit_vals <- pit_vals[is.finite(pit_vals) & pit_vals >= 0 & pit_vals <= 1]
 
   if (length(pit_vals) == 0) {
     stop("No valid PIT values found after filtering missing/extreme entries.")
   }
 
-  # Kolmogorov-Smirnov test for uniformity
-  ks_res <- suppressWarnings(ks.test(pit_vals, "punif", 0, 1))
-
-  # Coverage calibration deviation
-  # ECDF(pit) compared against theoretical uniform CDF
-  empirical_quantiles <- ecdf(pit_vals)(pit_vals)
-  theoretical_quantiles <- pit_vals
-  mean_cov_delta <- mean(empirical_quantiles - theoretical_quantiles)
-
-  # Harmonized grading scale
-  # |delta| <= 0.02: well-calibrated (excellent)
-  # 0.02 < |delta| <= 0.05: moderately calibrated (fair)
-  # |delta| > 0.05: mis-calibrated (poor)
-  if (abs(mean_cov_delta) <= 0.02) {
-    calibration_diagnosis <- "well-calibrated"
-    cal_status <- "excellent"
-  } else if (mean_cov_delta > 0.02) {
-    calibration_diagnosis <- "under-confident (predictions too uncertain / intervals too wide)"
-    cal_status <- ifelse(mean_cov_delta <= 0.05, "fair", "poor")
-  } else {
-    calibration_diagnosis <- "over-confident (predictions too certain / intervals too narrow)"
-    cal_status <- ifelse(mean_cov_delta >= -0.05, "fair", "poor")
-  }
-
-  assessment <- list(
-    ks_pvalue = ks_res$p.value,
-    well_calibrated = (ks_res$p.value > 0.05) && (abs(mean_cov_delta) <= 0.02),
-    rating = cal_status,
-    mean_coverage_deviation = round(mean_cov_delta, 4),
-    calibration_diagnosis = calibration_diagnosis
-  )
-
+  # An ordinary PIT ECDF is descriptive. Its departure from the diagonal
+  # is not empirical interval coverage, especially for discrete outcomes.
+  empirical <- ecdf(pit_vals)
   report <- list(
     n_observations = length(pit_vals),
-    assessment = assessment
+    assessment = list(
+      mean_pit = mean(pit_vals),
+      max_abs_ecdf_difference = max(abs(empirical(pit_vals) - pit_vals)),
+      note = "Descriptive ordinary PIT only; no universal calibration threshold. Use randomized PIT for discrete outcomes and account for spatial dependence."
+    )
   )
 
   if (save_plots) {
@@ -72,7 +47,7 @@ assess_inla_calibration <- function(result, save_plots = FALSE, plot_dir = ".") 
       geom_histogram(aes(y = after_stat(density)), bins = 20, fill = "skyblue", color = "black", alpha = 0.7) +
       geom_hline(yintercept = 1, linetype = "dashed", color = "firebrick", linewidth = 0.8) +
       theme_minimal() +
-      labs(title = "PIT Calibration Histogram", subtitle = "Dashed line indicates perfect uniformity", x = "PIT Value", y = "Density")
+      labs(title = "PIT Calibration Histogram", subtitle = "Reference line: continuous uniform distribution", x = "PIT Value", y = "Density")
     
     hist_path <- file.path(plot_dir, "pit_histogram.png")
     ggsave(hist_path, p_hist, width = 6, height = 4, dpi = 300)
@@ -82,7 +57,7 @@ assess_inla_calibration <- function(result, save_plots = FALSE, plot_dir = ".") 
       stat_ecdf(geom = "step", color = "navy", linewidth = 0.8) +
       geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "firebrick", linewidth = 0.8) +
       theme_minimal() +
-      labs(title = "PIT Empirical Cumulative Distribution", subtitle = "Dashed line indicates theoretical uniform CDF", x = "Theoretical Uniform Quantiles", y = "Empirical Probability")
+      labs(title = "PIT Empirical Cumulative Distribution", subtitle = "Reference line: continuous uniform CDF", x = "Theoretical Uniform Quantiles", y = "Empirical Probability")
     
     ecdf_path <- file.path(plot_dir, "pit_ecdf.png")
     ggsave(ecdf_path, p_ecdf, width = 6, height = 4, dpi = 300)

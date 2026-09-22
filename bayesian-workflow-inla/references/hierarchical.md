@@ -47,7 +47,7 @@ formula <- y ~ 1 + f(group_id, covariate, model = "iid2d", n = 2)
 
 ### Spatial effects
 
-For areal data, BYM2 (Besag-York-Mollie 2) is the standard model. It combines a structured spatial effect (ICAR) and an unstructured IID effect, with a mixing parameter.
+For areal data, BYM2 is a common model combining a scaled ICAR effect and an IID effect. Its mixing parameter is not an exact spatial variance fraction at every area, because constrained ICAR marginal variances vary by location. Check connected components and singletons when specifying constraints and scaling. [Riebler et al. (2016)](https://doi.org/10.1177/0962280216660421); [Morris et al. (2019)](https://doi.org/10.1016/j.sste.2019.100301).
 
 ```r
 # Need a spatial graph

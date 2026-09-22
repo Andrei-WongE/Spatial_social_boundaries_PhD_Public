@@ -8,10 +8,9 @@ suppressPackageStartupMessages({
 
 #' Run Prior Predictive Simulation Check
 #'
-#' Simulates linear predictor and response distributions given prior draws and covariates.
+#' Illustrative one-predictor simulation. Replace its priors and design with the actual analysis model before using it as a prior check.
 #'
 #' @param n_sim Number of prior simulation draws
-#' @param formula Model formula representation or linear predictor specification
 #' @param family Likelihood family ("gaussian", "poisson", "binomial")
 #' @param save_plot Logical; whether to save plot
 #' @param output_dir Output directory path
@@ -39,10 +38,12 @@ check_prior_predictive <- function(n_sim = 1000,
   
   # Generate outcome draws based on family
   if (family == "gaussian") {
-    sigma_draws <- rexp(n_sim, rate = 1) # Exponential PC prior base
+    sigma_draws <- rexp(n_sim, rate = -log(0.01)) # P(sigma > 1) = 0.01 in this illustration
     y_sim <- rnorm(n_sim * 100, mean = as.vector(eta_matrix), sd = rep(sigma_draws, 100))
   } else if (family == "poisson") {
-    y_sim <- rpois(n_sim * 100, lambda = pmin(exp(as.vector(eta_matrix)), 1e6))
+    rates <- exp(as.vector(eta_matrix))
+    if (any(!is.finite(rates))) stop("Non-finite Poisson rates under illustrated priors; revise the prior, not the draws.")
+    y_sim <- rpois(n_sim * 100, lambda = rates)
   } else if (family == "binomial") {
     prob <- 1 / (1 + exp(-as.vector(eta_matrix)))
     y_sim <- rbinom(n_sim * 100, size = 1, prob = prob)
@@ -56,7 +57,8 @@ check_prior_predictive <- function(n_sim = 1000,
     family = family,
     n_sim = n_sim,
     quantiles = as.list(quantiles),
-    plausible = TRUE
+    plausible = NULL,
+    note = "Illustrative prior simulation only; plausibility requires domain judgment and matching the actual model."
   )
   
   if (save_plot) {
@@ -104,6 +106,7 @@ if (sys.nframe() == 0) {
   )
   
   json_out <- toJSON(res, auto_unbox = TRUE, pretty = TRUE)
+  if (!dir.exists(opt$output_dir)) dir.create(opt$output_dir, recursive = TRUE)
   json_file <- file.path(opt$output_dir, "prior_predictive_summary.json")
   writeLines(json_out, json_file)
   cat(paste("Prior predictive summary saved to", json_file, "\n"))

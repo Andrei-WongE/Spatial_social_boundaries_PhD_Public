@@ -7,7 +7,7 @@ suppressPackageStartupMessages({
 
 #' Diagnose INLA Model Fit
 #'
-#' Computes CPO failure rates, LCPO (-mean(log(cpo))), PIT uniformity via Kolmogorov-Smirnov test,
+#' Summarizes CPO flags, LCPO and ordinary PIT values without universal pass/fail cutoffs,
 #' and extracts DIC and WAIC with effective parameter counts.
 #'
 #' @param result An INLA result object (loaded from .rds)
@@ -20,7 +20,6 @@ diagnose_inla_model <- function(result) {
   lcpo <- NA
   n_failures <- 0
   n_severe_failures <- 0
-  cpo_ok <- FALSE
 
   if (!is.null(result$cpo)) {
     failures <- result$cpo$failure
@@ -33,41 +32,26 @@ diagnose_inla_model <- function(result) {
     cpo_vals <- result$cpo$cpo
     if (!is.null(cpo_vals)) {
       # Standard LCPO: negative mean log-CPO (lower is better)
-      lcpo <- -mean(log(cpo_vals[cpo_vals > 0]), na.rm = TRUE)
+      lcpo <- if (length(cpo_vals) && all(is.finite(cpo_vals) & cpo_vals > 0)) -mean(log(cpo_vals)) else NA_real_
     }
     
-    # CPO failure threshold: <= 0.01 (1%) is pass/ok, > 0.01 is warning/fail
-    cpo_ok <- ifelse(!is.na(cpo_failure_rate) && cpo_failure_rate <= 0.01, TRUE, FALSE)
   }
 
   report$cpo <- list(
     lcpo = lcpo,
     failure_rate = cpo_failure_rate,
     n_failures = n_failures,
-    n_severe_failures = n_severe_failures,
-    ok = cpo_ok
+    n_severe_failures = n_severe_failures
   )
 
-  # PIT checks
-  pit_ks_pvalue <- NA
-  pit_uniform <- FALSE
-  pit_ok <- FALSE
-
-  if (!is.null(result$cpo) && !is.null(result$cpo$pit)) {
-    pit_vals <- result$cpo$pit
-    pit_vals <- pit_vals[!is.na(pit_vals) & pit_vals > 0 & pit_vals < 1]
-    if (length(pit_vals) > 0) {
-      ks_res <- suppressWarnings(ks.test(pit_vals, "punif", 0, 1))
-      pit_ks_pvalue <- ks_res$p.value
-      pit_uniform <- pit_ks_pvalue > 0.05
-      pit_ok <- pit_uniform
-    }
-  }
-
+  # Ordinary PIT values are descriptive here. Uniformity tests require a
+  # continuous predictive distribution and a justified dependence structure.
+  pit_vals <- if (!is.null(result$cpo)) result$cpo$pit else NULL
+  pit_vals <- pit_vals[is.finite(pit_vals)]
   report$pit <- list(
-    ks_pvalue = pit_ks_pvalue,
-    uniform = pit_uniform,
-    ok = pit_ok
+    n_values = length(pit_vals),
+    mean = if (length(pit_vals)) mean(pit_vals) else NA_real_,
+    note = "Ordinary PIT: interpret only for continuous outcomes; consider randomized PIT for discrete outcomes and account for dependence."
   )
 
   # DIC
@@ -98,29 +82,10 @@ diagnose_inla_model <- function(result) {
     report$waic <- list(waic = NA, p_eff = NA)
   }
 
-  report$all_ok <- isTRUE(report$cpo$ok) && isTRUE(report$pit$ok)
-
-  # Overall assessment
-  issues <- c()
-  if (!isTRUE(report$cpo$ok)) {
-    if (!is.na(cpo_failure_rate) && cpo_failure_rate > 0.05) {
-      issues <- c(issues, sprintf("Severe CPO failure rate (%.1f%% > 5%%)", cpo_failure_rate * 100))
-    } else {
-      issues <- c(issues, sprintf("CPO failure rate exceeds standard threshold (%.1f%% > 1%%)", cpo_failure_rate * 100))
-    }
-  }
-  if (!isTRUE(report$pit$ok)) {
-    issues <- c(issues, "PIT values deviate from uniformity (Kolmogorov-Smirnov p <= 0.05)")
-  }
-
+  # No automatic pass/fail conclusion follows from a flag proportion or PIT plot.
   report$overall <- list(
-    ok = length(issues) == 0,
-    issues = issues,
-    recommendation = ifelse(
-      length(issues) == 0, 
-      "Model passes numerical stability and cross-validation diagnostics. Ready for interpretation.", 
-      paste("Address issues before interpreting results:", paste(issues, collapse = "; "))
-    )
+    n_cpo_flags = n_failures,
+    recommendation = "Inspect positive CPO flags and extreme log scores; recompute questionable values with inla.cpo() or held-out refits. Interpret PIT in light of outcome type and spatial dependence."
   )
 
   return(report)
