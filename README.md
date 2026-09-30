@@ -1,5 +1,5 @@
 # Spatial_social_boundaries_PhD_Public
-Public repository of PhD spatial data pipeline, processes approximately 20 hours. Result of refactoring entire PhD project using use {targets} + {tarchetypes} + Duck DB spatial for large spatial data operations + spatial Bayesian dissimilarity and Bayesian INLA/Inlabru areal data modelling.
+Public repository of PhD spatial data pipeline, processes approximately 55 hours, on a humble 64-bit laptop equipped with an Intel Core i7-1360P processor (12 cores, 16 threads) and 32 GB RAM. Result of refactoring entire PhD project using use {targets} + {tarchetypes} + Duck DB spatial for large spatial data operations + spatial Bayesian dissimilarity and Bayesian INLA/Inlabru areal data modelling.
 
 This project studies ethnic boundaries and food-purchase outcomes spatial variability across London LSOAs. `_targets.R` orchestrates the analysis with **targets** and **tarchetypes**. unctions live in 8 stages, ~1,462 targets, 41 `R/` source files, source data in `Data/`, and analysis outputs in `results/`.
 
