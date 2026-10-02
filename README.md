@@ -34,60 +34,16 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 
 ## Pipeline conceptual workflow
 
-1. **Register Census tables, boundary geography, POI and Tesco Grocery 1.0 source files.**
-  + *Purpose*: Register source data file paths
-  + *Scope*: 8 tar_file() targets (no computation, paths only)
-    
-2. **Prepare London data and validate coverage, geometry and ethnic proportions.**
-  + *Purpose*: Load, validate, and clean source data (Census, geographic, POI)
-  + *Scope*: ~40 targets (load, validate, rename, check coverage & geometry) 
-    - Ethnic groups from ONS Official Census categories, grouping following Catney (2016)
-    - Verify valid boundary geography geometry and coverage
-    - Covert to sf objects and set geographical projection to CRS
-    - Verify valid point geography geometry and coverage
-   + *Key decisions*:
-     - Rook adjacency defines the shared boundary topology.
-    
-3. **Estimate canonical (Model 1), CARBayes/Leroux (Model 2) and locally adaptive CARBayes (Model 3) boundaries; produce classifications, ethnic-specific maps and area summaries.**
-   + *Purpose*: Estimate ethnic social boundaries (3 methods), classify frontiers 
-   + *Scope*: 20+ targets
-    - Build boundary topology
-    - Edge geometry and lengths statistics
-    - Run models 1 and 2 locally and model 3 using crew clusters, which submits jobs using system calls to the SLURM
-    - Frontier classification funnel, percentile SD threshold following Dean et al. (2019) and Bayesian False Discovery Rate Control following Wu & Banerjee (2024)
-    - Convergence checks and diagnostics
-    - Create area level boundary indicators, following Legewie (2018)
-    - Mapping and distribution plots of 3 boundary outputs  
-    - 
-
-   + *Key decisions*:
-    - Increasing models foot-print, previously single-chain, so PSRF was unverifiable
-    - 
-    
-4. **Construct food-environment measures and master tables.**
-  + *Purpose*: Classify POIs, aggregate to LSOA, apply smoothing
-  + *Scope*: ~15 targets (POI classification, food counts, density predictors)
-  + cvbgsfhgs
-  + sfadgadg
-    
-5. **Select and transform predictors and outcomes.**
-  + *Purpose*: Filter outcomes/predictors, standardize, build regression samples
-  + *Scope*: ~25 targets (log transforms, standardization, masking, validation)
-  + cvbgsfhgs
-  + sfadgadg
-    
-6. **Fit frequentist models and assess spatial dependence, weights and non-spatial and spatial impacts.**
-  + *Purpose*: Fit OLS, spatial lag/error, GMM, SARAR, Beta regressions
-  + *Scope*: 87 targets (3 methods × 6 outcomes/specs × 8-10 model types)
-
-    
-7. **Fit INLA BYM2 outcome models and export prior, predictive and numerical diagnostics.**
-  + *Purpose*: Fit Bayesian spatial models
-  + *Scope*: 99 INLA models + 102 diagnostic targets
-
-8. **Evaluate threshold, graph/control and exposure-uncertainty sensitivity and collect validation outputs.**
-  + *Purpose*: Structural robustness, sensitivity and uncertainty propagation checks
-  + *Scope*: 20+ base targets + 120 INLA exposure fits
+| Sections | Key questions |
+|---|---|
+| **1. Register Census tables, boundary geography, POI and Tesco Grocery 1.0 source files.**<br><br>**Purpose:** Register source data file paths<br><br>**Scope:** 8 `tar_file()` targets (no computation, paths only) | |
+| **2. Prepare London data and validate coverage, geometry and ethnic proportions.**<br><br>**Purpose:** Load, validate, and clean source data (Census, geographic, POI)<br><br>**Scope:** ~40 targets (load, validate, rename, check coverage & geometry)<br><br>- Ethnic groups from ONS Official Census categories, grouping following Catney (2016)<br>- Verify valid boundary geography geometry and coverage<br>- Convert to `sf` objects and set geographical projection to CRS<br>- Verify valid point geography geometry and coverage<br><br>**Key decisions:**<br>- Rook adjacency defines the shared boundary topology. |Are different sources compatible in time and space? What is the support for LSOA level variables? What is the spatial resolution of the DGP of these variables? What level of ethnic disaggregation of variables?  |
+| **3. Estimate canonical (Model 1), CARBayes/Leroux (Model 2) and locally adaptive CARBayes (Model 3) boundaries; produce classifications, ethnic-specific maps and area summaries.**<br><br>**Purpose:** Estimate ethnic social boundaries (3 methods), classify frontiers<br><br>**Scope:** 20+ targets<br><br>- Build boundary topology<br>- Edge geometry and lengths statistics<br>- Run models 1 and 2 locally and model 3 using `crew` clusters, which submit jobs using system calls to SLURM<br>- Frontier classification funnel, percentile SD threshold following Dean et al. (2019) and Bayesian False Discovery Rate Control following Wu & Banerjee (2024)<br>- Convergence checks and diagnostics<br>- Create area-level boundary indicators, following Legewie (2018)<br>- Mapping and distribution plots of 3 boundary outputs<br><br>**Key decisions:**<br>- Increasing models footprint; previously single-chain, so PSRF was unverifiable<br>- | Ethnic composition in urban environments strongly collineates with deprivation, housing tenure, and retail access.  |
+| **4. Construct food-environment measures and master tables.**<br><br>**Purpose:** Classify POIs, aggregate to LSOA, apply smoothing<br><br>**Scope:** ~15 targets (POI classification, food counts, density predictors)<br><br>cvbgsfhgs<br><br>sfadgadg | |
+| **5. Select and transform predictors and outcomes.**<br><br>**Purpose:** Filter outcomes/predictors, standardize, build regression samples<br><br>**Scope:** ~25 targets (log transforms, standardization, masking, validation)<br><br>cvbgsfhgs<br><br>sfadgadg | |
+| **6. Fit frequentist models and assess spatial dependence, weights and non-spatial and spatial impacts.**<br><br>**Purpose:** Fit OLS, spatial lag/error, GMM, SARAR, Beta regressions<br><br>**Scope:** 87 targets (3 methods × 6 outcomes/specs × 8–10 model types) | |
+| **7. Fit INLA BYM2 outcome models and export prior, predictive and numerical diagnostics.**<br><br>**Purpose:** Fit Bayesian spatial models<br><br>**Scope:** 99 INLA models + 102 diagnostic targets | |
+| **8. Evaluate threshold, graph/control and exposure-uncertainty sensitivity and collect validation outputs.**<br><br>**Purpose:** Structural robustness, sensitivity and uncertainty propagation checks<br><br>**Scope:** 20+ base targets + 120 INLA exposure fits | |
     
 ## Technical references
 
