@@ -165,22 +165,23 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 
 - Broadbridge, T. [Food deserts and geographically weighted regression replication repository](https://github.com/taylabroadbridge/paper-fooddeserts-gwr.git).
 
-- ONS Census, 2011, Tables: KS404UK - Car or van availability Change dataset.
-                            KS201EW — Ethnic Groups
-                            LC7202EW / LC7102EW — Distance Travelled to Work by Ethnic Group (Local Characteristics)
-                            LC7101EW — Method of Travel to Work by Ethnic Group (Local Characteristics)
-                            LC6115EW — Economic Activity by Ethnic Group (Local Characteristics)
-                            LC5202EW — Highest Level of Qualification by Ethnic Group (Local Characteristics)
-                            DC7401EWla / DC7401EW — Method of Travel to Work by Car or Van Availability
-                            KS102EW — Age Structure: Provides age bracket distributions
-                            KS105EW — Household Composition: Provides household structures
-                            KS204EW — Country of Birth: Measures immigrant concentration
-                            KS206EW — Household Language: Measures English language proficiency
-                            KS401EW — Dwellings, Household Spaces and Accommodation Type: Measures housing morphology 
-                            KS402EW — Tenure: Measures housing tenure and equity
-                            KS501EW — Qualifications and Students: Measures educational distribution
-                            KS601EW — Economic Activity: Measures labor market participation
-                            KS301EW — Health and Provision of Unpaid Care: Measures health deprivation and limiting illness
+- ONS Census, 2011, Tables:
+    + KS404UK - Car or van availability Change dataset.
+    + KS201EW — Ethnic Groups
+    + LC7202EW / LC7102EW — Distance Travelled to Work by Ethnic Group (Local Characteristics)
+    + LC7101EW — Method of Travel to Work by Ethnic Group (Local Characteristics)
+    + LC6115EW — Economic Activity by Ethnic Group (Local Characteristics)
+    + LC5202EW — Highest Level of Qualification by Ethnic Group (Local Characteristics)
+    + DC7401EWla / DC7401EW — Method of Travel to Work by Car or Van Availability
+    + KS102EW — Age Structure: Provides age bracket distributions
+    + KS105EW — Household Composition: Provides household structures
+    + KS204EW — Country of Birth: Measures immigrant concentration
+    + KS206EW — Household Language: Measures English language proficiency
+    + KS401EW — Dwellings, Household Spaces and Accommodation Type: Measures housing morphology
+    + KS402EW — Tenure: Measures housing tenure and equity
+    + KS501EW — Qualifications and Students: Measures educational distribution
+    + KS601EW — Economic Activity: Measures labor market participation
+    + KS301EW — Health and Provision of Unpaid Care: Measures health deprivation and limiting illness
   
 - Transport for London (TfL). Public Transport Accessibility Levels (PTAL / PTAI). Direct data request.
 
@@ -196,113 +197,3 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 - Gemini NotebookLM with technical documentation of [`targets package`](https://books.ropensci.org/targets/) and [`tarchetypes package`](https://docs.ropensci.org/tarchetypes/) for efficient consulting of targets implementation and computational configuration of pipeline. 
 - Posit AI assistant as refactoring orchestrator and validator of workflow based on code and results of [7 static and linear scripts](https://github.com/Andrei-WongE/Social_boundaries_LAC).
 - My brain (novel approach in this nascent AI era), 3 years of PhD level training in spatial econometrics, Bayesian statistics and data management. See [my page](https://andrei-wonge.github.io/Andrei-Wong.github.io/) for theoretical and methodological underpinning of this workflow.
-    
-## Technical references
-
-### Bayesian workflow and model criticism
-
-- Gabry, J., Simpson, D., Vehtari, A., Betancourt, M., and Gelman, A. (2019). [Visualization in Bayesian workflow](https://sites.stat.columbia.edu/gelman/research/published/bayes-vis.pdf).
-
-- Agresti, A., Kateri, M., Grove, W., and Mira, A. (2026). *Foundations of Bayesian Statistics for Data Scientists*. 
-
-- Lynch, S. M. (2007). *Introduction to Applied Bayesian Statistics and Estimation for Social Scientists*. 
-
-- [Bayesian model diagnostics notes](https://bookdown.org/marklhc/notes_bookdown/model-diagnostics.html).
-
-- [bayesplot documentation](https://cran.r-project.org/web/packages/bayesplot/bayesplot.pdf).
-
-- [Bayesian workflow with R-INLA](https://github.com/).
-
-### R-INLA and spatial Bayesian modelling
-
-- Bakka, H., Rue, H., Fuglstad, G.-A., et al. (2018). [Spatial modeling with R-INLA: A review](https://arxiv.org/abs/1802.06350).
-
-- Rue, H., Riebler, A., Sørbye, S. H., Illian, J. B., Simpson, D. P., and Lindgren, F. K. (2017). *Bayesian Computing with INLA: A Review*. 
-
-- [R-INLA documentation](https://www.r-inla.org/).
-
-- [R-INLA documentation and manuals](https://www.r-inla.org/doc/inla).
-
-- [INLA BYM2 latent model documentation](https://www.inla.r-inla-download.org/r-inla.org/doc/latent/bym2.pdf).
-
-- [INLA PC prior for precision](https://inla.r-inla-download.org/r-inla.org/doc/prior/pc.prec.pdf).
-
-- [INLA posterior sampling documentation](https://www.r-inla.org/learnmore/docs/reference/posterior.sample.html).
-
-- [INLA predictor-control documentation](https://www.r-inla.org/learnmore/docs/reference/control.predictor.html).
-
-- [INLA group cross-validation guidance](https://www.inla.r-inla-download.org/r-inla.org/doc/vignettes/AA-group-cv.html).
-
-### Penalized Complexity priors
-
-- Simpson, D., Rue, H., Riebler, A., Martins, T. G., and Sørbye, S. H. (2017). [Penalising model component complexity: A principled, practical approach to constructing priors](https://doi.org/10.1214/16-STS576).
-
-- [INLA PC precision prior documentation](https://inla.r-inla-download.org/r-inla.org/doc/prior/pc.prec.pdf).
-
-### CARBayes and spatial boundary modelling
-
-- Lee, D. (2013). [CARBayes: An R package for Bayesian spatial modeling with conditional autoregressive models](https://www.jstatsoft.org/article/view/v055i13).
-
-- Lee, D., and Mitchell, R. (2012). [Boundary detection in disease mapping studies](https://arxiv.org/abs/1108.1879).
-
-- Lu, H., and Carlin, B. P. (2005). [Bayesian areal wombling for geographical boundary analysis](https://doi.org/10.1111/j.1538-4632.2005.00624.x).
-
-- Lawson, A. B. (2021). *Using R for Bayesian Spatial and Spatio-Temporal Health Modeling*. 
-
-- [Social-frontier modelling supplement](C:/Users/Andre/Zotero/storage/Y9XUWXI4/tesg12316-supp-0001-suppinfo1.docx).
-
-### Boundary and multiple-testing methods
-
-- Li, P., et al. (2012). [False discovery rate control for spatial boundary detection](https://intlpress.com/site/pub/files/_fulltext/journals/sii/2012/0005/0002/SII-2012-0005-0002-a001.pdf).
-
-### INLA diagnostic tools
-
-- [inlatools documentation](https://inbo.github.io/inlatools/).
-
-- [inlatools function reference](https://inbo.r-universe.dev/inlatools/reference/).
-
-- [inlatools distribution-checking vignette](https://inbo.github.io/inlatools/articles/distribution.html).
-
-- [inlatools distribution documentation](https://inlatools.netlify.app/articles/distribution).
-
-- [inlatools manual PDF](https://inbo.r-universe.dev/inlatools/doc/manual.pdf).
-
-### Data sources
-
-- Aiello, L. M., Schifanella, R., Quercia, D., and Del Prete, L. (2020). [Large-scale and high-resolution analysis of food purchases in London](https://doi.org/10.1038/s41597-020-0397-7).
-
-- Broadbridge, T. [Food deserts and geographically weighted regression replication repository](https://github.com/taylabroadbridge/paper-fooddeserts-gwr.git).
-
-- ONS Census, 2011, Tables: KS404UK - Car or van availability Change dataset.
-                            KS201EW — Ethnic Groups
-                            LC7202EW / LC7102EW — Distance Travelled to Work by Ethnic Group (Local Characteristics)
-                            LC7101EW — Method of Travel to Work by Ethnic Group (Local Characteristics)
-                            LC6115EW — Economic Activity by Ethnic Group (Local Characteristics)
-                            LC5202EW — Highest Level of Qualification by Ethnic Group (Local Characteristics)
-                            DC7401EWla / DC7401EW — Method of Travel to Work by Car or Van Availability
-                            KS102EW — Age Structure: Provides age bracket distributions
-                            KS105EW — Household Composition: Provides household structures
-                            KS204EW — Country of Birth: Measures immigrant concentration
-                            KS206EW — Household Language: Measures English language proficiency
-                            KS401EW — Dwellings, Household Spaces and Accommodation Type: Measures housing morphology 
-                            KS402EW — Tenure: Measures housing tenure and equity
-                            KS501EW — Qualifications and Students: Measures educational distribution
-                            KS601EW — Economic Activity: Measures labor market participation
-                            KS301EW — Health and Provision of Unpaid Care: Measures health deprivation and limiting illness
-  
-- Transport for London (TfL). Public Transport Accessibility Levels (PTAL / PTAI). Direct data request.
-
-- Greater London Authority [LSOA Atlas](https://data.london.gov.uk/dataset/lsoa-atlas-2n8zy)
-
-- Ordnance Survey Points of Interest Data. Data Creator/Publisher: Ordnance Survey & PointX. © Crown copyright and database right [2015]. Contains PointX database right [2015]. 
-
-- ONS Digital Vector Boundaries for Lower layer Super Output Areas (December 2011) Boundaries EW BFC (V3). [The BFC boundaries are full resolution - clipped to the coastline (Mean High Water mark)](https://geoportal.statistics.gov.uk/datasets/ons::lower-layer-super-output-areas-december-2011-boundaries-ew-bfc-v3/about)
-
-### Project-specific guidance
-
-- [`bayesian-workflow-inla` skill](bayesian-workflow-inla) adapted skill from [An opinionated Agent Skill for building, diagnosing, and reporting on Bayesian statistical models using PyMC and ArviZ.](https://github.com/Learning-Bayesian-Statistics/baygent-skills/tree/main/bayesian-workflow). Skill is experimental, known issues listed in [log](bayesian-workflow-inla/log.md).
-- Gemini NotebookLM with technical documentation of [`targets package`](https://books.ropensci.org/targets/) and [`tarchetypes package`](https://docs.ropensci.org/tarchetypes/) for efficient consulting of targets implementation and computational configuration of pipeline. 
-- Posit AI assistant as refactoring orchestrator and validator of workflow based on code and results of [7 static and linear scripts](https://github.com/Andrei-WongE/Social_boundaries_LAC).
-- My brain (novel approach in this nascent AI era), 3 years of PhD level training in spatial econometrics, Bayesian statistics and data management. See [my page](https://andrei-wonge.github.io/Andrei-Wong.github.io/) for theoretical and methodological underpinning of this workflow.
-
-
