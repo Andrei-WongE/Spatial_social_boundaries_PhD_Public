@@ -20,7 +20,8 @@ B) Diagnostic and Reporting:
 Additionally, script `run_reports.R` triggers basic reporting and diagnostic checks using outputs in `results` folder. Script does not run if `tar_outdated()` results in outdated targets in pipeline. 
 
 C) Diagnostic and Refitting 
-Finally the following refitting sequence is implemented:
+
+The following refitting sequence is implemented:
 
 validate numerical LOO → inspect variance allocation → elicit and test one prior component at a time → run spatial holdouts → consider likelihood or mean-structure changes → reassess coefficients
 
