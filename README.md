@@ -44,7 +44,7 @@ This sequence follows iterative predictive criticism rather than tuning priors t
 | **5. Select and transform predictors and outcomes.**<br><br>**Purpose:** Filter outcomes/predictors, standardize, build regression samples<br><br>**Scope:** ~25 targets (log transforms, standardization, masking, validation)<br><br>cvbgsfhgs<br><br>sfadgadg | |
 | **6. Fit frequentist models and assess spatial dependence, weights and non-spatial and spatial impacts.**<br><br>**Purpose:** Fit OLS, spatial lag/error, GMM, SARAR, Beta regressions<br><br>**Scope:** 87 targets (3 methods × 6 outcomes/specs × 8–10 model types) | |
 | **7. Fit INLA BYM2 outcome models and export prior, predictive and numerical diagnostics.**<br><br>**Purpose:** Fit Bayesian spatial models<br><br>**Scope:** 99 INLA models + 102 diagnostic targets | |
-| **8. Evaluate threshold, graph/control and exposure-uncertainty sensitivity and collect validation outputs.**<br><br>**Purpose:** Structural robustness, sensitivity and uncertainty propagation checks<br><br>**Scope:** 20+ base targets + 120 INLA exposure fits | |
+| **8. Evaluate threshold, graph/control and exposure-uncertainty sensitivity and collect validation outputs.**<br><br>**Purpose:** Structural robustness, sensitivity and uncertainty propagation checks<br><br>**Scope:** 20+ base targets + 120 INLA exposure fits | Does the result depend on boundary definition? Does the result depend on area exposure geometry? |
 
 ## Areal wombling
 
