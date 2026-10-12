@@ -161,7 +161,7 @@ Areal Wombling                         Leroux CAR                               
 
 - Ordnance Survey Points of Interest Data. Data Creator/Publisher: Ordnance Survey & PointX. © Crown copyright and database right [2015]. Contains PointX database right [2015]. 
 
-- ONS Digital Vector Boundaries for Lower layer Super Output Areas (December 2011) Boundaries EW BFC (V3). [The BFC boundaries are full resolution - clipped to the coastline (Mean High Water mark)](https://geoportal.statistics.gov.uk/datasets/ons::lower-layer-super-output-areas-december-2011-boundaries-ew-bfc-v3/about)
+- ONS Digital Vector Boundaries for Lower layer Super Output Areas (December 2011) Boundaries EW BFC (V3). [The BFC boundaries are full resolution - clipped to the coastline (Mean High Water mark)](https://geoportal.statistics.gov.uk/datasets/ons::lower-layer-super-output-areas-december-2011-boundaries-ew-bfc-v3/about) NOT BFE because includes the riverbed area, it can artificially skew area based calculations. For more info about [spatial dataset format](https://geoportal.statistics.gov.uk/).
 
 ### Project-specific guidance
 
